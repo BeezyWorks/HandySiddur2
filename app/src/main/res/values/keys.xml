@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="elevation_key">key_elevation</string>
+    <string name="latitude_key">key_latitude</string>
+    <string name="longitude_key">key_longitude</string>
+</resources>
