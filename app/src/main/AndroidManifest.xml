@@ -41,6 +41,25 @@
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="600" />
         </service>
+
+        <service
+            android:name=".complication.DateComplication"
+            android:icon="@drawable/cloud_ladder"
+            android:label="@string/date_complication_label"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LONG_TEXT, SHORT_TEXT" />
+
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="600" />
+        </service>
+
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />

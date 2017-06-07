@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mattaniahbeezy.handysiddur.R;
-import com.mattaniahbeezy.handysiddur.hebrewcalendar.Zman;
-import com.mattaniahbeezy.handysiddur.hebrewcalendar.ZmanimCalculator;
 import com.mattaniahbeezy.handysiddur.utilities.DateFormatter;
+import com.mattaniahbeezy.siddurlibrary.hebrewcalendar.Zman;
+import com.mattaniahbeezy.siddurlibrary.hebrewcalendar.ZmanimCalculator;
 
 import java.util.ArrayList;
 import java.util.Date;

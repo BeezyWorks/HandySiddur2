@@ -3,4 +3,5 @@
     <string name="hello_round">Hello Round World!</string>
     <string name="hello_square">Hello Square World!</string>
     <string name="zman_complication_label">Upcoming Zman</string>
+    <string name="date_complication_label">Hebrew Date</string>
 </resources>

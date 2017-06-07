@@ -1,0 +1,142 @@
+{
+  "project_info": {
+    "project_number": "200656089391",
+    "firebase_url": "https://directed-sensor-780.firebaseio.com",
+    "project_id": "directed-sensor-780",
+    "storage_bucket": "directed-sensor-780.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:200656089391:android:6e52014c35700ec3",
+        "android_client_info": {
+          "package_name": "com.mattaniahbeezy.icecreamsiddur"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "200656089391-8o80q8rlgiaavhlbg0jf50big0cvahs2.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "200656089391-a747q5cft1bjg42jpsi6l5pv11q4umov.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "200656089391-j0kdk1s7blkirubjd2mmrsd7sig1qha8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mattaniahbeezy.icecreamsiddur",
+            "certificate_hash": "df8041bbc7026dcf5e467559c592796cd816960e"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-nFTGbGOm7bymG8OjeJMmbignlA4Ri7Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "200656089391-8o80q8rlgiaavhlbg0jf50big0cvahs2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:200656089391:android:f4f192b805f9c5ba",
+        "android_client_info": {
+          "package_name": "com.mattaniahbeezy.handysiddur"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "200656089391-tqi9tom0h8qmfe2vcilbb8pgbll000kh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mattaniahbeezy.handysiddur",
+            "certificate_hash": "146d33c41a1a3c465a0d1df216e2a8422cb74ad7"
+          }
+        },
+        {
+          "client_id": "200656089391-8o80q8rlgiaavhlbg0jf50big0cvahs2.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "200656089391-a747q5cft1bjg42jpsi6l5pv11q4umov.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-nFTGbGOm7bymG8OjeJMmbignlA4Ri7Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "200656089391-8o80q8rlgiaavhlbg0jf50big0cvahs2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:200656089391:android:0acab18f5d310e39",
+        "android_client_info": {
+          "package_name": "com.mattaniahbeezy.siddurlibrary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "200656089391-8o80q8rlgiaavhlbg0jf50big0cvahs2.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "200656089391-a747q5cft1bjg42jpsi6l5pv11q4umov.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-nFTGbGOm7bymG8OjeJMmbignlA4Ri7Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

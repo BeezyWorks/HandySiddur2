@@ -1,4 +1,4 @@
-package com.mattaniahbeezy.handysiddur.hebrewcalendar;
+package com.mattaniahbeezy.siddurlibrary.hebrewcalendar;
 
 import android.location.Location;
 import android.support.annotation.NonNull;

@@ -1,4 +1,4 @@
-package com.mattaniahbeezy.handysiddur.hebrewcalendar;
+package com.mattaniahbeezy.siddurlibrary.hebrewcalendar;
 
 import android.support.annotation.Nullable;
 
