@@ -67,6 +67,8 @@ public abstract class BaseFirebaseConnector<T extends FirebaseModel> {
 
     protected static HashMap<Nusach, List<String>> toNusachMap(HashMap<String, List<String>> rawValue) {
         HashMap<Nusach, List<String>> returnMap = new HashMap<>();
+        if(rawValue==null)
+            return returnMap;
         for (String key : rawValue.keySet()) {
             returnMap.put(Nusach.from(key), rawValue.get(key));
         }
@@ -76,7 +78,9 @@ public abstract class BaseFirebaseConnector<T extends FirebaseModel> {
     protected static Evaluation from(HashMap<String, Object> raw) {
         if (raw == null) return null;
         Evaluation evaluation = new Evaluation();
-        evaluation.operator = Evaluation.Operator.from((Long) raw.get("operator"));
+        evaluation.operator = Evaluation.Operator.AND;
+        if (raw.containsKey("operator"))
+            evaluation.operator = Evaluation.Operator.from((Long) raw.get("operator"));
         evaluation.elements = (List<HashMap<String, Object>>) raw.get("elements");
         return evaluation;
     }

@@ -23,12 +23,13 @@ public class MainActivity extends AppCompatActivity implements TefilaAssembler.T
         setContentView(R.layout.activity_main);
         BaseFirebaseConnector.initializeFirebase();
         mTextView = (TextView) findViewById(R.id.textView);
-        TefilaAssembler assembler = new TefilaAssembler(nusach, "bentching", this, null);
+        TefilaAssembler assembler = new TefilaAssembler(nusach, "shacharis", this, null);
     }
 
     @Override
     public void tefilaReady(List<TefilaAssembler.ResolvedSection> resolvedSections) {
         for (TefilaAssembler.ResolvedSection resolvedSection : resolvedSections) {
+//            resolvedSection = resolvedSections.get(0);
             Spanned string = resolvedSection.getResolvedTranslations().get(Translation.HEBREW);
             mTextView.setText(string);
         }

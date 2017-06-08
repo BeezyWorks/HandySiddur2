@@ -55,18 +55,20 @@ final class EvaluationResolver {
 
         boolean allTrue = true;
         boolean someTrue = false;
-        for (HashMap<String, Object> element : evaluation.getElements()) {
-            boolean elementValue = evaluateElement(element);
-            if (elementValue) {
-                someTrue = true;
-            } else {
-                allTrue = false;
-            }
-            if (someTrue && operator == Operator.OR) {
-                return true;
-            }
-            if (!allTrue && operator == Operator.AND) {
-                return false;
+        if(evaluation.getElements()!=null) {
+            for (HashMap<String, Object> element : evaluation.getElements()) {
+                boolean elementValue = evaluateElement(element);
+                if (elementValue) {
+                    someTrue = true;
+                } else {
+                    allTrue = false;
+                }
+                if (someTrue && operator == Operator.OR) {
+                    return true;
+                }
+                if (!allTrue && operator == Operator.AND) {
+                    return false;
+                }
             }
         }
         return operator == Operator.AND ? allTrue : someTrue;

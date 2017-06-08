@@ -56,7 +56,7 @@ public class Style {
             charCount += splited[start].length();
             start++;
         }
-        return charCount;
+        return charCount+words;
     }
 
     public Object getSpannableObject() {

@@ -2,6 +2,7 @@ package firebaseconnector.database;
 
 import android.support.annotation.Nullable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 
@@ -80,15 +81,18 @@ public class TefilaAssembler {
 
         @Override
         public void dataAvailable(TextGroup textGroup) {
-            textGroups.put(textGroup.$key, textGroup);
-            for (String elementKey : textGroup.elements.get(nusach)) {
-                if (!textElements.containsKey(elementKey)) {
-                    textElements.put(elementKey, null);
-                    textElementAPI.findByKey(elementKey, textElementAvailable);
+            if (textGroup.elements.containsKey(nusach)) {
+                textGroups.put(textGroup.$key, textGroup);
+                for (String elementKey : textGroup.elements.get(nusach)) {
+                    if (!textElements.containsKey(elementKey)) {
+                        textElements.put(elementKey, null);
+                        textElementAPI.findByKey(elementKey, textElementAvailable);
+                    }
                 }
             }
         }
     }
+
 
     private class TextElementAvailable implements BaseFirebaseConnector.FirebaseCallback<TextElement> {
 
@@ -102,7 +106,7 @@ public class TefilaAssembler {
                         @Override
                         public void spannableStringReady(SpannableString span) {
                             elementValues.get(textElement).put(translation, span);
-                            attemptResolveTefila();
+                                attemptResolveTefila();
                         }
                     });
                 }
@@ -133,6 +137,14 @@ public class TefilaAssembler {
                                         }
                                     }
                                 }
+                            }
+                        }
+                        // add linebreak at end of group
+                        for (Translation translation : translations) {
+                            if (resolvedSection.getForTranslation(translation) != null) {
+                                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(resolvedSection.getForTranslation(translation));
+                                spannableStringBuilder.append("\n");
+                                resolvedSection.setForTranslation(translation, spannableStringBuilder);
                             }
                         }
                     }

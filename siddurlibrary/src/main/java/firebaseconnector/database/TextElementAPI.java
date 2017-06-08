@@ -69,9 +69,11 @@ public class TextElementAPI extends BaseFirebaseConnector<TextElement> {
                     SpannableString spannableString = new SpannableString(string);
                     if (textElement.styles != null) {
                         for (Style style : textElement.styles) {
-                            Object spannableObject = style.getSpannableObject();
-                            if (spannableObject != null) {
-                                spannableString.setSpan(spannableObject, 0, style.endIndex(string), 0);
+                            if(style !=null) {
+                                Object spannableObject = style.getSpannableObject();
+                                if (spannableObject != null) {
+                                    spannableString.setSpan(spannableObject, 0, style.endIndex(string), 0);
+                                }
                             }
                         }
                     }
@@ -79,11 +81,17 @@ public class TextElementAPI extends BaseFirebaseConnector<TextElement> {
                 }
             });
         }
+        else{
+            //TODO: pesukim
+            callback.spannableStringReady(new SpannableString(""));
+        }
     }
 
     private static Style styleFrom(HashMap<String, Object> raw) {
         Style style = new Style();
         style.name = (String) raw.get("name");
+        if (style.name == null)
+            return null;
         style.position = Style.Position.from((String) raw.get("position"));
         if (raw.containsKey("words")) {
             long longWords = (long) raw.get("words");
