@@ -1,5 +1,7 @@
 package firebaseconnector.database;
 
+import android.text.SpannableString;
+
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import firebaseconnector.models.Translation;
  */
 
 public class TextElementAPI extends BaseFirebaseConnector<TextElement> {
+
     @Override
     String getTypePath() {
         return "text-elements/";
@@ -54,13 +57,27 @@ public class TextElementAPI extends BaseFirebaseConnector<TextElement> {
         return textElement;
     }
 
-    public void getText(TextElement textElement, StringCallback stringCallback){
+    public void getText(TextElement textElement, SpannableStringCallback stringCallback) {
         getText(textElement, Translation.HEBREW, stringCallback);
     }
 
-    public void getText(TextElement textElement, Translation translation, StringCallback callback){
-        if(textElement.text!=null){
-            getString(textElement.text, translation, callback);
+    public void getText(final TextElement textElement, Translation translation, final SpannableStringCallback callback) {
+        if (textElement.text != null) {
+            getString(textElement.text, translation, new StringCallback() {
+                @Override
+                public void stringAvailable(String string) {
+                    SpannableString spannableString = new SpannableString(string);
+                    if (textElement.styles != null) {
+                        for (Style style : textElement.styles) {
+                            Object spannableObject = style.getSpannableObject();
+                            if (spannableObject != null) {
+                                spannableString.setSpan(spannableObject, 0, style.endIndex(string), 0);
+                            }
+                        }
+                    }
+                    callback.spannableStringReady(spannableString);
+                }
+            });
         }
     }
 
@@ -70,8 +87,12 @@ public class TextElementAPI extends BaseFirebaseConnector<TextElement> {
         style.position = Style.Position.from((String) raw.get("position"));
         if (raw.containsKey("words")) {
             long longWords = (long) raw.get("words");
-            style.words= (int) longWords;
+            style.words = (int) longWords;
         }
         return style;
+    }
+
+    public interface SpannableStringCallback {
+        void spannableStringReady(SpannableString span);
     }
 }

@@ -2,7 +2,6 @@ package firebaseconnector.models;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Beezy Works Studios on 6/5/2017.
@@ -26,50 +25,20 @@ public class Evaluation {
     public Operator operator;
     public List<HashMap<String, Object>> elements;
 
-    public boolean evaluate() {
-        boolean allTrue = true;
-        boolean someTrue = false;
-        for (HashMap<String, Object> element : elements) {
-            boolean elementValue = evaluateElement(element);
-            if (elementValue) {
-                someTrue = true;
-            } else {
-                allTrue = false;
-            }
-            if (someTrue && operator == Operator.OR) {
-                return true;
-            }
-            if (!allTrue && operator == Operator.AND) {
-                return false;
-            }
-        }
-        return operator == Operator.AND ? allTrue : someTrue;
+    public int getOmerDay() {
+        return omerDay;
     }
 
-    private boolean evaluateElement(HashMap<String, Object> element) {
-        Operator operator = Operator.from((Long) element.get("operator"));
-        boolean allTrue = true;
-        boolean someTrue = false;
-        Set<String> fields = element.keySet();
-        fields.remove("operator");
-        for (String field : fields) {
-            boolean fieldValue = evaluateField(field, (boolean) element.get(field));
-            if (fieldValue) {
-                someTrue = true;
-            } else {
-                allTrue = false;
-            }
-            if (someTrue && operator == Operator.OR)
-                return true;
-            if (!allTrue && operator == Operator.AND)
-                return false;
-        }
-        return operator == Operator.AND ? allTrue : someTrue;
+    public String getParsha() {
+        return parsha;
     }
 
-    private boolean evaluateField(String field, boolean desiredValue) {
-//        TODO: this
-        return true;
+    public Operator getOperator() {
+        return operator;
+    }
+
+    public List<HashMap<String, Object>> getElements() {
+        return elements;
     }
 }
 
