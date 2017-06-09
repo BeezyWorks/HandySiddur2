@@ -52,6 +52,10 @@ public class ZmanimCalculator {
         return Zman.CHATZOS_HALAILA;
     }
 
+    public long getShaaZmanisGra(){
+        return complexZmanimCalendar.getShaahZmanisGra();
+    }
+
     private void generateZmanimList() {
         for (Zman zman : Zman.values()) {
             generateZmanTime(zman);

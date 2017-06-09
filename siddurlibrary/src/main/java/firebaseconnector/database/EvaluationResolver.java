@@ -55,7 +55,7 @@ final class EvaluationResolver {
 
         boolean allTrue = true;
         boolean someTrue = false;
-        if(evaluation.getElements()!=null) {
+        if (evaluation.getElements() != null) {
             for (HashMap<String, Object> element : evaluation.getElements()) {
                 boolean elementValue = evaluateElement(element);
                 if (elementValue) {
@@ -152,6 +152,8 @@ final class EvaluationResolver {
                 return hebrewDate.isPurimKatan();
             case "Purim": // takes location into account
                 return hebrewDate.isPurim();
+            case "Pesach":
+                return hebrewDate.isPesach();
             case "Pesach1":
                 return hebrewDate.isPesachOne();
             case "Pesach2":

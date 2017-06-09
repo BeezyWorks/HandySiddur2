@@ -92,16 +92,16 @@ public class LocationPermissionUtility implements GoogleApiClient.ConnectionCall
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        locationHandled.locationAvailable(getSavedLocation(), SAVED);
+        locationHandled.locationAvailable(getSavedLocation(context), SAVED);
         disconnect();
     }
 
-    public boolean hasSavedLocation() {
+    public static boolean hasSavedLocation(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.contains(context.getResources().getString(R.string.elevation_key));
     }
 
-    public Location getSavedLocation() {
+    public static Location getSavedLocation(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         Resources res = context.getResources();
         double longitude = Double.valueOf(sharedPreferences.getString(res.getString(R.string.longitude_key), "35.235806"));

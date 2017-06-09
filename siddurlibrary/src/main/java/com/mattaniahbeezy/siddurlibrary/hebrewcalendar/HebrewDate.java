@@ -381,7 +381,7 @@ public class HebrewDate {
             if (jewishCalendar.getJewishMonth() == JewishDate.TISHREI && jewishCalendar.getJewishDayOfMonth() > 8)
                 tachanun = false;
 
-            if (jewishCalendar.getJewishMonth() == JewishDate.SIVAN && jewishCalendar.getJewishMonth() < 13)
+            if (jewishCalendar.getJewishMonth() == JewishDate.SIVAN && jewishCalendar.getJewishDayOfMonth() < 13)
                 tachanun = false;
 
             int yomTovIndex = jewishCalendar.getYomTovIndex();

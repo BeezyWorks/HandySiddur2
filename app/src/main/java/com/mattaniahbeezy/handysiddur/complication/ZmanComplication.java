@@ -36,8 +36,8 @@ public class ZmanComplication extends ComplicationProviderService implements Loc
         }
         locationUtil = new LocationPermissionUtility(this, this);
         locationUtil.connect();
-        if (locationUtil.hasSavedLocation()) {
-            ZmanimCalculator.getInstance().setLocation(locationUtil.getSavedLocation());
+        if (LocationPermissionUtility.hasSavedLocation(this)) {
+            ZmanimCalculator.getInstance().setLocation(LocationPermissionUtility.getSavedLocation(this));
         }
         onComplicationUpdate(complicationId, type, manager);
     }

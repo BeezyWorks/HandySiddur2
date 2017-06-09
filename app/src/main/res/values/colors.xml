@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="earlyMorningColor">#ffc107</color>
+    <color name="morningColor">#03a9f4</color>
+    <color name="daytimeColor">#5677fc</color>
+    <color name="afternoonColor">#ff9800</color>
+    <color name="lateAfternoonColor">#ff5722</color>
+    <color name="nighttimeColor">#3f51b5</color>
+</resources>

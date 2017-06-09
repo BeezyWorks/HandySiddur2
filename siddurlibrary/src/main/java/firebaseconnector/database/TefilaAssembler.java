@@ -40,7 +40,7 @@ public class TefilaAssembler {
     private TextGroupAvailable textGroupAvailable = new TextGroupAvailable();
     private TextElementAvailable textElementAvailable = new TextElementAvailable();
 
-    public TefilaAssembler(final Nusach nusach, String tefilaKey, TefilaCallback callback, @Nullable List<Translation> translations) {
+    public TefilaAssembler(final Nusach nusach, TefilaCallback callback, @Nullable List<Translation> translations) {
         this.nusach = nusach;
         this.callback = callback;
         if (translations == null) {
@@ -48,6 +48,10 @@ public class TefilaAssembler {
             translations.add(Translation.HEBREW);
         }
         this.translations = translations;
+    }
+
+    public void assemble(String tefilaKey) {
+        sections.clear();
         TefilaAPI tefilaAPI = new TefilaAPI();
         tefilaAPI.findByKey(tefilaKey, new BaseFirebaseConnector.FirebaseCallback<Tefila>() {
             @Override
@@ -61,6 +65,11 @@ public class TefilaAssembler {
                 }
             }
         });
+    }
+
+    public void setCallback(TefilaCallback callback) {
+        this.callback = callback;
+        attemptResolveTefila();
     }
 
     private class SectionAvailable implements BaseFirebaseConnector.FirebaseCallback<Section> {
@@ -93,6 +102,7 @@ public class TefilaAssembler {
         }
     }
 
+    int callbackCount = 0;
 
     private class TextElementAvailable implements BaseFirebaseConnector.FirebaseCallback<TextElement> {
 
@@ -102,11 +112,14 @@ public class TefilaAssembler {
             if (!elementValues.containsKey(textElement)) {
                 elementValues.put(textElement, new HashMap<Translation, SpannableString>());
                 for (final Translation translation : translations) {
+                    callbackCount++;
                     textElementAPI.getText(textElement, translation, new TextElementAPI.SpannableStringCallback() {
                         @Override
                         public void spannableStringReady(SpannableString span) {
+                            callbackCount --;
                             elementValues.get(textElement).put(translation, span);
-                                attemptResolveTefila();
+                            if(callbackCount<10);
+                            attemptResolveTefila();
                         }
                     });
                 }

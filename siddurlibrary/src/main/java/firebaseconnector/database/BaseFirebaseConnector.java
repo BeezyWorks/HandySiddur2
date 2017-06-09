@@ -31,6 +31,10 @@ public abstract class BaseFirebaseConnector<T extends FirebaseModel> {
         return rootNode + getTypePath();
     }
 
+    public static void syncAll(){
+        FirebaseDatabase.getInstance().getReference(rootNode);
+    }
+
     public void findByKey(String key, final FirebaseCallback<T> callback) {
         FirebaseDatabase.getInstance().getReference(getPath() + key).addValueEventListener(new ValueEventListener() {
             @Override

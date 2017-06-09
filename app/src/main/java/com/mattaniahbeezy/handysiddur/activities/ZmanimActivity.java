@@ -1,10 +1,10 @@
 package com.mattaniahbeezy.handysiddur.activities;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.complications.ProviderUpdateRequester;
 import android.support.wearable.view.CurvedChildLayoutManager;
 import android.support.wearable.view.WearableRecyclerView;
@@ -19,7 +19,7 @@ import com.mattaniahbeezy.siddurlibrary.hebrewcalendar.ZmanimCalculator;
  * Created by Beezy Works Studios on 6/2/2017.
  */
 
-public class ZmanimActivity  extends Activity implements LocationPermissionUtility.LocationHandled {
+public class ZmanimActivity  extends WearableActivity implements LocationPermissionUtility.LocationHandled {
 
     //private static final String Tag = "ZmanimActivity";
     private LocationPermissionUtility locationUtility;
@@ -32,12 +32,12 @@ public class ZmanimActivity  extends Activity implements LocationPermissionUtili
         WearableRecyclerView recyclerView = (WearableRecyclerView) findViewById(R.id.zmanimRecycler);
         zmanRecyclerAdapter = new ZmanRecyclerAdapter();
         recyclerView.setAdapter(zmanRecyclerAdapter);
-        recyclerView.setCenterEdgeItems(false);
         recyclerView.setLayoutManager(new CurvedChildLayoutManager(this));
         recyclerView.setCircularScrollingGestureEnabled(true);
         recyclerView.setCenterEdgeItems(true);
         locationUtility = new LocationPermissionUtility(this, this);
         locationUtility.connect();
+        setAmbientEnabled();
     }
 
     private void updateComplication() {

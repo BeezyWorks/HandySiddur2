@@ -3,6 +3,9 @@ package firebaseconnector.database;
 import android.text.SpannableString;
 
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +49,9 @@ public class TextElementAPI extends BaseFirebaseConnector<TextElement> {
             long endVerseLong = (long) raw.get("endVerse");
             textElement.endVerse = (int) endVerseLong;
         }
+        if(raw.containsKey("breakLineAtVerse")){
+            textElement.breakLineAtVerse = (boolean) raw.get("breakLineAtVerse");
+        }
         if (raw.containsKey("styles")) {
             List<HashMap<String, Object>> rawStyles = (List<HashMap<String, Object>>) raw.get("styles");
             textElement.styles = new ArrayList<Style>();
@@ -61,29 +67,61 @@ public class TextElementAPI extends BaseFirebaseConnector<TextElement> {
         getText(textElement, Translation.HEBREW, stringCallback);
     }
 
+    private void stringToSpannable(TextElement textElement, String string, SpannableStringCallback callback){
+        SpannableString spannableString = new SpannableString(string);
+        if (textElement.styles != null) {
+            for (Style style : textElement.styles) {
+                if (style != null) {
+                    Object spannableObject = style.getSpannableObject();
+                    if (spannableObject != null) {
+                        spannableString.setSpan(spannableObject, 0, style.endIndex(string), 0);
+                    }
+                }
+            }
+        }
+        callback.spannableStringReady(spannableString);
+    }
+
     public void getText(final TextElement textElement, Translation translation, final SpannableStringCallback callback) {
-        if (textElement.text != null) {
+            if (textElement.text != null) {
             getString(textElement.text, translation, new StringCallback() {
                 @Override
                 public void stringAvailable(String string) {
-                    SpannableString spannableString = new SpannableString(string);
-                    if (textElement.styles != null) {
-                        for (Style style : textElement.styles) {
-                            if(style !=null) {
-                                Object spannableObject = style.getSpannableObject();
-                                if (spannableObject != null) {
-                                    spannableString.setSpan(spannableObject, 0, style.endIndex(string), 0);
-                                }
-                            }
-                        }
-                    }
-                    callback.spannableStringReady(spannableString);
+                  stringToSpannable(textElement, string, callback);
                 }
             });
-        }
-        else{
-            //TODO: pesukim
-            callback.spannableStringReady(new SpannableString(""));
+        } else {
+            FirebaseDatabase.getInstance().getReference("tanach/" + translation.getFirebaseNode() + textElement.book + "/" + (textElement.chapter - 1)).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    ArrayList<String> pesukim = (ArrayList<String>) dataSnapshot.getValue();
+                    String pasukEnd = " ";
+                    int start = textElement.startVerse-1;
+                    if(start<0){
+                        start=0;
+                    }
+                    int end = textElement.endVerse;
+                    if(end==-1 || end>pesukim.size())
+                        end=pesukim.size();
+                    StringBuilder stringBuilder = new StringBuilder();
+                    int i = start;
+                    do{
+                        stringBuilder.append(pesukim.get(i));
+                        stringBuilder.append(pasukEnd);
+                        if (textElement.breakLineAtVerse){
+                            stringBuilder.append("\n");
+                        }
+                        i++;
+                    } while (i<end);
+
+                    stringToSpannable(textElement, stringBuilder.toString(), callback);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 

@@ -15,7 +15,7 @@ public enum Translation {
             case ENGLISH:
                 return "english/";
             case TRANSLITERATED:
-                return "transliterated";
+                return "transliterated/";
         }
     return "ERROR";
     }

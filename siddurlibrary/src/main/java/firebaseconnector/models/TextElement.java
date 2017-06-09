@@ -12,6 +12,7 @@ public class TextElement extends FirebaseModel {
     public int chapter = -1;
     public int startVerse = -1;
     public int endVerse = -1;
+    public boolean breakLineAtVerse = false;
     public String book;
     public List<Style> styles;
 }
