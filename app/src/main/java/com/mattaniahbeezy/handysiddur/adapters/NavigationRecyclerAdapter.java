@@ -18,8 +18,14 @@ import com.mattaniahbeezy.handysiddur.activities.ZmanimActivity;
 
 public class NavigationRecyclerAdapter extends RecyclerView.Adapter<NavigationRecyclerAdapter.NavigationViewHolder> {
 
+    ShabbosAlarmStart shabbosAlarmStart;
+
+    public void setShabbosAlarmStart(ShabbosAlarmStart shabbosAlarmStart) {
+        this.shabbosAlarmStart = shabbosAlarmStart;
+    }
+
     enum NavigationItem {
-        ZMANIM, BENTCHING, MEIN_SHALOSH;
+        ZMANIM, BENTCHING, MEIN_SHALOSH, START_SHABBOS_ALARM;
 
         String getHebrewTitle() {
             switch (this) {
@@ -30,6 +36,8 @@ public class NavigationRecyclerAdapter extends RecyclerView.Adapter<NavigationRe
                     return "ברכת המזון";
                 case MEIN_SHALOSH:
                     return "מעין שלוש";
+                case START_SHABBOS_ALARM:
+                    return "Shabbos Mode";
             }
             return null;
         }
@@ -50,7 +58,7 @@ public class NavigationRecyclerAdapter extends RecyclerView.Adapter<NavigationRe
             return null;
         }
 
-        private Intent getDaveningActivityIntent(Context context){
+        private Intent getDaveningActivityIntent(Context context) {
             return new Intent(context, DaveningActivity.class);
         }
     }
@@ -87,7 +95,28 @@ public class NavigationRecyclerAdapter extends RecyclerView.Adapter<NavigationRe
 
         @Override
         public void onClick(View view) {
-            view.getContext().startActivity(navigationItem.getIntent(view.getContext()));
+            switch (navigationItem) {
+
+                case ZMANIM:
+                    view.getContext().startActivity(navigationItem.getIntent(view.getContext()));
+                    break;
+                case BENTCHING:
+                    view.getContext().startActivity(navigationItem.getIntent(view.getContext()));
+                    break;
+                case MEIN_SHALOSH:
+                    view.getContext().startActivity(navigationItem.getIntent(view.getContext()));
+                    break;
+                case START_SHABBOS_ALARM:
+                    if (shabbosAlarmStart != null) {
+                        shabbosAlarmStart.startShabbosAlarm();
+                    }
+                    break;
+            }
+
         }
+    }
+
+    public interface ShabbosAlarmStart {
+        void startShabbosAlarm();
     }
 }

@@ -1,5 +1,7 @@
 package firebaseconnector.database;
 
+import android.support.annotation.Nullable;
+
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
@@ -15,6 +17,17 @@ public class CategoryAPI extends BaseFirebaseConnector<Category> {
     @Override
     String getTypePath() {
         return "categories/";
+    }
+
+    @Nullable
+    @Override
+    Category getCached(String key) {
+        return null;
+    }
+
+    @Override
+    void setCached(Category value) {
+        // TODO: this
     }
 
     @Override

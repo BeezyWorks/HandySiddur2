@@ -52,13 +52,6 @@ public class AnalogWatchface extends CanvasWatchFaceService {
     private class Engine extends CanvasWatchFaceService.Engine {
         static final int MSG_UPDATE_TIME = 0;
 
-        long nightTime;
-        long lateAfternoonTime;
-        long afternoonTime;
-        long daytime;
-        long morningTime;
-        long earlyMorningTime;
-
         int earlyMorningColor;
         int morningColor;
         int daytimeColor;
@@ -107,6 +100,7 @@ public class AnalogWatchface extends CanvasWatchFaceService {
             public void onReceive(Context context, Intent intent) {
                 mTime.setTimeZone(TimeZone.getDefault());
                 mTime.setTimeInMillis(System.currentTimeMillis());
+                ZmanimCalculator.getInstance().setCalendar(Calendar.getInstance());
             }
         };
         boolean mRegisteredTimeZoneReceiver = false;
@@ -125,17 +119,16 @@ public class AnalogWatchface extends CanvasWatchFaceService {
             }
             super.onCreate(holder);
 
-            if(LocationPermissionUtility.hasSavedLocation(AnalogWatchface.this)) {
+            if (LocationPermissionUtility.hasSavedLocation(AnalogWatchface.this)) {
                 ZmanimCalculator.getInstance().setLocation(LocationPermissionUtility.getSavedLocation(AnalogWatchface.this));
             }
+            ZmanimCalculator.getInstance().setCalendar(Calendar.getInstance());
 
             setWatchFaceStyle(new WatchFaceStyle.Builder(AnalogWatchface.this)
                     .setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT)
                     .setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
                     .setShowSystemUiTime(false)
                     .build());
-
-            setHighlightTimes();
 
             mBackgroundColor = new Paint();
             mBackgroundColor.setAlpha(255);
@@ -283,6 +276,10 @@ public class AnalogWatchface extends CanvasWatchFaceService {
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             mTime.setTimeInMillis(System.currentTimeMillis());
+            if (mTime.get(Calendar.MINUTE) == 1) {
+                ZmanimCalculator.getInstance().setCalendar(Calendar.getInstance());
+                HebrewDate.updateDate();
+            }
             mSplotchPaint.setColor(getHighlightColor());
 
             int width = bounds.width();
@@ -398,11 +395,6 @@ public class AnalogWatchface extends CanvasWatchFaceService {
 
         private void setTextSizeForWidth(Paint paint, float desiredWidth,
                                          String text) {
-
-            // Pick a reasonably large value for the test. Larger values produce
-            // more accurate results, but may cause problems with hardware
-            // acceleration. But there are workarounds for that, too; refer to
-            // http://stackoverflow.com/questions/6253528/font-size-too-large-to-fit-in-cache
             final float testTextSize = 48f;
 
             // Get the bounds of the text, using our testTextSize.
@@ -496,30 +488,22 @@ public class AnalogWatchface extends CanvasWatchFaceService {
             return currentTime - sunrise.getTime();
         }
 
-        private void setHighlightTimes() {
-            if (ZmanimCalculator.getInstance().getZmanTime(Zman.SHKIA) == null)
-                return;
-            nightTime = ZmanimCalculator.getInstance().getZmanTime(Zman.TZEIS).getTime();
-            lateAfternoonTime = ZmanimCalculator.getInstance().getZmanTime(Zman.PLAG_HAMINCHA).getTime();
-            afternoonTime = ZmanimCalculator.getInstance().getZmanTime(Zman.MINCHA_KETANA).getTime();
-            daytime = ZmanimCalculator.getInstance().getZmanTime(Zman.TEFILA_GRA).getTime();
-            morningTime = ZmanimCalculator.getInstance().getZmanTime(Zman.HANEITZ).getTime();
-            earlyMorningTime = ZmanimCalculator.getInstance().getZmanTime(Zman.ALOS).getTime();
-        }
-
         private int getHighlightColor() {
-            long currentTime = mTime.getTimeInMillis();
-            if (currentTime > nightTime)
+            if (ZmanimCalculator.getInstance().getZmanTime(Zman.ALOS) == null) {
                 return nighttimeColor;
-            if (currentTime > lateAfternoonTime)
+            }
+            long currentTime = mTime.getTimeInMillis();
+            if (currentTime > ZmanimCalculator.getInstance().getZmanTime(Zman.TZEIS).getTime())
+                return nighttimeColor;
+            if (currentTime > ZmanimCalculator.getInstance().getZmanTime(Zman.PLAG_HAMINCHA).getTime())
                 return laterAfternoonColor;
-            if (currentTime > afternoonTime)
+            if (currentTime > ZmanimCalculator.getInstance().getZmanTime(Zman.MINCHA_KETANA).getTime())
                 return afternoonColor;
-            if (currentTime > daytime)
+            if (currentTime > ZmanimCalculator.getInstance().getZmanTime(Zman.TEFILA_GRA).getTime())
                 return daytimeColor;
-            if (currentTime > morningTime)
+            if (currentTime > ZmanimCalculator.getInstance().getZmanTime(Zman.HANEITZ).getTime())
                 return morningColor;
-            if (currentTime > earlyMorningTime)
+            if (currentTime > ZmanimCalculator.getInstance().getZmanTime(Zman.ALOS).getTime())
                 return earlyMorningColor;
             return nighttimeColor;
         }

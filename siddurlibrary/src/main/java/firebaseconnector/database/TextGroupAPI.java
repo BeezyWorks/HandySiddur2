@@ -1,5 +1,7 @@
 package firebaseconnector.database;
 
+import android.support.annotation.Nullable;
+
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.HashMap;
@@ -12,10 +14,21 @@ import firebaseconnector.models.TextGroup;
  * Created by Beezy Works Studios on 6/7/2017.
  */
 
-public class TextGroupAPI extends BaseFirebaseConnector<TextGroup> {
+ class TextGroupAPI extends BaseFirebaseConnector<TextGroup> {
     @Override
     String getTypePath() {
         return "text-groups/";
+    }
+
+    @Nullable
+    @Override
+    TextGroup getCached(String key) {
+        return CachedFirebaseObjects.getInstance().getTextGroup(key);
+    }
+
+    @Override
+    void setCached(TextGroup value) {
+        CachedFirebaseObjects.getInstance().setTextGroup(value);
     }
 
     @Override

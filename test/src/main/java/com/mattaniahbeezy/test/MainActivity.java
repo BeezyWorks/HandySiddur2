@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity  {
         BaseFirebaseConnector.initializeFirebase();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new TefilaRecyclerAdapter("bentching"));
+        recyclerView.setAdapter(new TefilaRecyclerAdapter("shacharis"));
     }
 
 

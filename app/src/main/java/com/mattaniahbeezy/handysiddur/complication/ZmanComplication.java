@@ -18,6 +18,7 @@ import com.mattaniahbeezy.handysiddur.utilities.LocationPermissionUtility;
 import com.mattaniahbeezy.siddurlibrary.hebrewcalendar.Zman;
 import com.mattaniahbeezy.siddurlibrary.hebrewcalendar.ZmanimCalculator;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -45,6 +46,14 @@ public class ZmanComplication extends ComplicationProviderService implements Loc
     @Override
     public void onComplicationUpdate(int complicationId, int dataType, ComplicationManager complicationManager) {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(getApplicationContext(), ZmanimActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        Calendar zmanCalendar = ZmanimCalculator.getInstance().getCalendar();
+        Calendar now = Calendar.getInstance();
+        if (zmanCalendar.get(Calendar.DAY_OF_YEAR) != now.get(Calendar.DAY_OF_YEAR)) {
+            ZmanimCalculator.getInstance().setCalendar(now);
+        }
+        if (LocationPermissionUtility.hasSavedLocation(this)) {
+            ZmanimCalculator.getInstance().setLocation(LocationPermissionUtility.getSavedLocation(this));
+        }
         Zman upcomingZman = ZmanimCalculator.getInstance().getUpcomingZman();
         Date upcomingZmanTime = ZmanimCalculator.getInstance().getZmanTime(upcomingZman);
         String formattedZmanTime = upcomingZmanTime == null ?

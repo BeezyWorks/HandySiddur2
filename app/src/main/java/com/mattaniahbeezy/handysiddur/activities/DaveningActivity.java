@@ -9,6 +9,10 @@ import android.support.wearable.activity.WearableActivity;
 
 import com.mattaniahbeezy.handysiddur.R;
 import com.mattaniahbeezy.handysiddur.adapters.TefilaRecyclerAdapter;
+import com.mattaniahbeezy.siddurlibrary.hebrewcalendar.HebrewDate;
+import com.mattaniahbeezy.siddurlibrary.hebrewcalendar.ZmanimCalculator;
+
+import java.util.Calendar;
 
 /**
  * Created by Beezy Works Studios on 6/9/2017.
@@ -22,6 +26,8 @@ public class DaveningActivity extends WearableActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_davening);
+        HebrewDate.updateDate();
+        ZmanimCalculator.getInstance().setCalendar(Calendar.getInstance());
         recyclerView = (RecyclerView) findViewById(R.id.davening_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         processIntent(getIntent());

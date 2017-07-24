@@ -15,6 +15,8 @@ import com.mattaniahbeezy.handysiddur.complication.ZmanComplication;
 import com.mattaniahbeezy.handysiddur.utilities.LocationPermissionUtility;
 import com.mattaniahbeezy.siddurlibrary.hebrewcalendar.ZmanimCalculator;
 
+import java.util.Calendar;
+
 /**
  * Created by Beezy Works Studios on 6/2/2017.
  */
@@ -29,6 +31,7 @@ public class ZmanimActivity  extends WearableActivity implements LocationPermiss
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zmanim);
+        ZmanimCalculator.getInstance().setCalendar(Calendar.getInstance());
         WearableRecyclerView recyclerView = (WearableRecyclerView) findViewById(R.id.zmanimRecycler);
         zmanRecyclerAdapter = new ZmanRecyclerAdapter();
         recyclerView.setAdapter(zmanRecyclerAdapter);

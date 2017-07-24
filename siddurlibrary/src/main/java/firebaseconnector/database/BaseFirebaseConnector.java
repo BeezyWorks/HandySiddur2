@@ -1,5 +1,7 @@
 package firebaseconnector.database;
 
+import android.support.annotation.Nullable;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -18,8 +20,8 @@ import firebaseconnector.models.Translation;
  */
 
 public abstract class BaseFirebaseConnector<T extends FirebaseModel> {
-    protected static final String EVALUATION_KEY = "evaluation";
-    private static final String rootNode = "public/";
+    static final String EVALUATION_KEY = "evaluation";
+    static final String rootNode = "public/";
 
     public static void initializeFirebase() {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
@@ -27,20 +29,32 @@ public abstract class BaseFirebaseConnector<T extends FirebaseModel> {
 
     abstract String getTypePath();
 
-    protected String getPath() {
+    String getPath() {
         return rootNode + getTypePath();
     }
 
-    public static void syncAll(){
+    public static void syncAll() {
         FirebaseDatabase.getInstance().getReference(rootNode);
     }
 
-    public void findByKey(String key, final FirebaseCallback<T> callback) {
+    abstract
+    @Nullable
+    T getCached(String key);
+
+    abstract void setCached(T value);
+
+    void findByKey(String key, final FirebaseCallback<T> callback) {
+        if (getCached(key) != null) {
+            callback.dataAvailable(getCached(key));
+            return;
+        }
         FirebaseDatabase.getInstance().getReference(getPath() + key).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists())
+                if (dataSnapshot.exists()) {
                     callback.dataAvailable(from(dataSnapshot));
+                    setCached(from(dataSnapshot));
+                }
             }
 
             @Override
@@ -54,10 +68,15 @@ public abstract class BaseFirebaseConnector<T extends FirebaseModel> {
         getString(key, Translation.HEBREW, callback);
     }
 
-    public void getString(String key, Translation translation, final StringCallback callback) {
+    void getString(final String key, final Translation translation, final StringCallback callback) {
+        if (CachedFirebaseObjects.getInstance().getString(translation, key) != null) {
+            callback.stringAvailable(CachedFirebaseObjects.getInstance().getString(translation, key));
+            return;
+        }
         FirebaseDatabase.getInstance().getReference(rootNode + translation.getFirebaseNode() + key).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                CachedFirebaseObjects.getInstance().setString(key, translation, (String) dataSnapshot.getValue());
                 if (dataSnapshot.exists())
                     callback.stringAvailable((String) dataSnapshot.getValue());
             }
@@ -69,9 +88,9 @@ public abstract class BaseFirebaseConnector<T extends FirebaseModel> {
         });
     }
 
-    protected static HashMap<Nusach, List<String>> toNusachMap(HashMap<String, List<String>> rawValue) {
+    static HashMap<Nusach, List<String>> toNusachMap(HashMap<String, List<String>> rawValue) {
         HashMap<Nusach, List<String>> returnMap = new HashMap<>();
-        if(rawValue==null)
+        if (rawValue == null)
             return returnMap;
         for (String key : rawValue.keySet()) {
             returnMap.put(Nusach.from(key), rawValue.get(key));
@@ -91,7 +110,7 @@ public abstract class BaseFirebaseConnector<T extends FirebaseModel> {
 
     abstract T from(DataSnapshot dataSnapshot);
 
-    protected static void preProcessReturn(FirebaseModel firebaseModel, DataSnapshot dataSnapshot) {
+    static void preProcessReturn(FirebaseModel firebaseModel, DataSnapshot dataSnapshot) {
         firebaseModel.$key = dataSnapshot.getKey();
         HashMap<String, Object> raw = (HashMap<String, Object>) dataSnapshot.getValue();
         if (raw.containsKey("lastUpdated")) {
@@ -99,11 +118,11 @@ public abstract class BaseFirebaseConnector<T extends FirebaseModel> {
         }
     }
 
-    public interface FirebaseCallback<T> {
+    interface FirebaseCallback<T> {
         void dataAvailable(T data);
     }
 
-    public interface StringCallback {
+    interface StringCallback {
         void stringAvailable(String string);
     }
 }

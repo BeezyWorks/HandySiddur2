@@ -35,6 +35,16 @@ public class ZmanimCalculator {
         generateZmanimList();
     }
 
+    public void setCalendar(Calendar calendar) {
+        complexZmanimCalendar.setCalendar(calendar);
+        todayZmanim.clear();
+        generateZmanimList();
+    }
+
+    public Calendar getCalendar() {
+        return complexZmanimCalendar.getCalendar();
+    }
+
     public Zman getUpcomingZman() {
         Date now = new Date();
         for (Zman checkZman : Zman.values()) {
@@ -43,16 +53,16 @@ public class ZmanimCalculator {
             }
             Date zmanTime = getZmanTime(checkZman);
             if (zmanTime == null) {
-                continue;
+                generateZmanimList();
             }
-            if (zmanTime.after(now)) {
+            if (zmanTime != null && zmanTime.after(now)) {
                 return checkZman;
             }
         }
         return Zman.CHATZOS_HALAILA;
     }
 
-    public long getShaaZmanisGra(){
+    public long getShaaZmanisGra() {
         return complexZmanimCalendar.getShaahZmanisGra();
     }
 

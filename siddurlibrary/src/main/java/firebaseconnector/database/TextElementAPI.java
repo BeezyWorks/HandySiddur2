@@ -1,5 +1,6 @@
 package firebaseconnector.database;
 
+import android.support.annotation.Nullable;
 import android.text.SpannableString;
 
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +27,17 @@ public class TextElementAPI extends BaseFirebaseConnector<TextElement> {
         return "text-elements/";
     }
 
+    @Nullable
+    @Override
+    TextElement getCached(String key) {
+        return CachedFirebaseObjects.getInstance().getTextElement(key);
+    }
+
+    @Override
+    void setCached(TextElement value) {
+        CachedFirebaseObjects.getInstance().setTextElement(value);
+    }
+
     @Override
     TextElement from(DataSnapshot dataSnapshot) {
         TextElement textElement = new TextElement();
@@ -49,7 +61,7 @@ public class TextElementAPI extends BaseFirebaseConnector<TextElement> {
             long endVerseLong = (long) raw.get("endVerse");
             textElement.endVerse = (int) endVerseLong;
         }
-        if(raw.containsKey("breakLineAtVerse")){
+        if (raw.containsKey("breakLineAtVerse")) {
             textElement.breakLineAtVerse = (boolean) raw.get("breakLineAtVerse");
         }
         if (raw.containsKey("styles")) {
@@ -67,7 +79,7 @@ public class TextElementAPI extends BaseFirebaseConnector<TextElement> {
         getText(textElement, Translation.HEBREW, stringCallback);
     }
 
-    private void stringToSpannable(TextElement textElement, String string, SpannableStringCallback callback){
+    private void stringToSpannable(TextElement textElement, Translation translation, String string, SpannableStringCallback callback) {
         SpannableString spannableString = new SpannableString(string);
         if (textElement.styles != null) {
             for (Style style : textElement.styles) {
@@ -79,15 +91,20 @@ public class TextElementAPI extends BaseFirebaseConnector<TextElement> {
                 }
             }
         }
+        CachedFirebaseObjects.getInstance().setSpanned(textElement, translation, spannableString);
         callback.spannableStringReady(spannableString);
     }
 
-    public void getText(final TextElement textElement, Translation translation, final SpannableStringCallback callback) {
-            if (textElement.text != null) {
+    public void getText(final TextElement textElement, final Translation translation, final SpannableStringCallback callback) {
+        if(CachedFirebaseObjects.getInstance().getSpannedText(translation, textElement)!=null){
+            callback.spannableStringReady(CachedFirebaseObjects.getInstance().getSpannedText(translation, textElement));
+            return;
+        }
+        if (textElement.text != null) {
             getString(textElement.text, translation, new StringCallback() {
                 @Override
                 public void stringAvailable(String string) {
-                  stringToSpannable(textElement, string, callback);
+                    stringToSpannable(textElement, translation, string, callback);
                 }
             });
         } else {
@@ -96,25 +113,25 @@ public class TextElementAPI extends BaseFirebaseConnector<TextElement> {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     ArrayList<String> pesukim = (ArrayList<String>) dataSnapshot.getValue();
                     String pasukEnd = " ";
-                    int start = textElement.startVerse-1;
-                    if(start<0){
-                        start=0;
+                    int start = textElement.startVerse - 1;
+                    if (start < 0) {
+                        start = 0;
                     }
                     int end = textElement.endVerse;
-                    if(end==-1 || end>pesukim.size())
-                        end=pesukim.size();
+                    if (end == -1 || end > pesukim.size())
+                        end = pesukim.size();
                     StringBuilder stringBuilder = new StringBuilder();
                     int i = start;
-                    do{
+                    do {
                         stringBuilder.append(pesukim.get(i));
                         stringBuilder.append(pasukEnd);
-                        if (textElement.breakLineAtVerse){
+                        if (textElement.breakLineAtVerse) {
                             stringBuilder.append("\n");
                         }
                         i++;
-                    } while (i<end);
+                    } while (i < end);
 
-                    stringToSpannable(textElement, stringBuilder.toString(), callback);
+                    stringToSpannable(textElement, translation, stringBuilder.toString(), callback);
                 }
 
                 @Override

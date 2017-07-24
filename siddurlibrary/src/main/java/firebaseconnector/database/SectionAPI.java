@@ -1,5 +1,7 @@
 package firebaseconnector.database;
 
+import android.support.annotation.Nullable;
+
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.HashMap;
@@ -15,6 +17,17 @@ public class SectionAPI extends BaseFirebaseConnector<Section> {
     @Override
     String getTypePath() {
         return "sections/";
+    }
+
+    @Nullable
+    @Override
+    Section getCached(String key) {
+        return CachedFirebaseObjects.getInstance().getSection(key);
+    }
+
+    @Override
+    void setCached(Section value) {
+        CachedFirebaseObjects.getInstance().setSection(value);
     }
 
     @Override

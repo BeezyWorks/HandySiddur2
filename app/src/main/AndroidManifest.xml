@@ -73,13 +73,15 @@
                 android:resource="@xml/watch_face" />
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
-                android:resource="@drawable/cloud_ladder" />
+                android:resource="@drawable/analog_round" />
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
+
+        <service android:name=".notification.ShabbosNotificationService"/>
 
         <meta-data
             android:name="com.google.android.wearable.standalone"

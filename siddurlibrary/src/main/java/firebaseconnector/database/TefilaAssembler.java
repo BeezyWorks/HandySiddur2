@@ -50,9 +50,9 @@ public class TefilaAssembler {
         this.translations = translations;
     }
 
-    public void assemble(String tefilaKey) {
+    public void assemble(final String tefilaKey) {
         sections.clear();
-        TefilaAPI tefilaAPI = new TefilaAPI();
+        final TefilaAPI tefilaAPI = new TefilaAPI();
         tefilaAPI.findByKey(tefilaKey, new BaseFirebaseConnector.FirebaseCallback<Tefila>() {
             @Override
             public void dataAvailable(Tefila data) {
@@ -77,7 +77,7 @@ public class TefilaAssembler {
         @Override
         public void dataAvailable(Section section) {
             sections.put(section.$key, section);
-            for (String textGroupKey : section.textGroupIds.get(nusach)) {
+            for (final String textGroupKey : section.textGroupIds.get(nusach)) {
                 if (!textGroups.containsKey(textGroupKey)) {
                     textGroups.put(textGroupKey, null);
                     textGroupAPI.findByKey(textGroupKey, textGroupAvailable);
@@ -92,7 +92,7 @@ public class TefilaAssembler {
         public void dataAvailable(TextGroup textGroup) {
             if (textGroup.elements.containsKey(nusach)) {
                 textGroups.put(textGroup.$key, textGroup);
-                for (String elementKey : textGroup.elements.get(nusach)) {
+                for (final String elementKey : textGroup.elements.get(nusach)) {
                     if (!textElements.containsKey(elementKey)) {
                         textElements.put(elementKey, null);
                         textElementAPI.findByKey(elementKey, textElementAvailable);
@@ -102,7 +102,7 @@ public class TefilaAssembler {
         }
     }
 
-    int callbackCount = 0;
+    private int callbackCount = 0;
 
     private class TextElementAvailable implements BaseFirebaseConnector.FirebaseCallback<TextElement> {
 
@@ -116,10 +116,11 @@ public class TefilaAssembler {
                     textElementAPI.getText(textElement, translation, new TextElementAPI.SpannableStringCallback() {
                         @Override
                         public void spannableStringReady(SpannableString span) {
-                            callbackCount --;
+                            callbackCount--;
                             elementValues.get(textElement).put(translation, span);
-                            if(callbackCount<10);
-                            attemptResolveTefila();
+                            if (callbackCount < 5) {
+                                attemptResolveTefila();
+                            }
                         }
                     });
                 }

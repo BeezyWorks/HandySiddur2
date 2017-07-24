@@ -41,6 +41,10 @@ public class HebrewDate {
         return instance;
     }
 
+    public static HebrewDate getTomorrowInstance() {
+        return tomorrowInstance;
+    }
+
     public static HebrewDate getTimeSensitiveInstance() {
         Date sunset = ZmanimCalculator.getInstance().getZmanTime(Zman.SHKIA);
         if (sunset == null || sunset.after(new Date())) {
@@ -49,9 +53,30 @@ public class HebrewDate {
         return tomorrowInstance;
     }
 
-    public static HebrewDate getTomorrowInstance() {
-        return tomorrowInstance;
+    public static void updateDate() {
+        instance.updateInstanceDate(false);
+        tomorrowInstance.updateInstanceDate(true);
     }
+
+    public static Calendar getCurrentDate() {
+        Calendar currentDate = Calendar.getInstance();
+        currentDate.set(Calendar.YEAR, instance.jewishCalendar.getGregorianYear());
+        currentDate.set(Calendar.MONTH, instance.jewishCalendar.getGregorianMonth());
+        currentDate.set(Calendar.DAY_OF_MONTH, instance.jewishCalendar.getGregorianDayOfMonth());
+        return currentDate;
+    }
+
+    private void updateInstanceDate(Boolean tomorrow) {
+        cachedEvaluations.clear();
+        jewishCalendar.setDate(Calendar.getInstance());
+        tomorrowJewishCalendar = new JewishCalendar();
+        tomorrowJewishCalendar.forward();
+        if(tomorrow){
+            jewishCalendar.forward();
+            tomorrowJewishCalendar.forward();
+        }
+    }
+
 
     private HebrewDateFormatter getHebrewDateFormatter() {
         if (hebrewDateFormatter == null) {
@@ -467,7 +492,7 @@ public class HebrewDate {
         return cachedEvaluations.get(havdalaKey);
     }
 
-    public boolean isTzomTaamuz(){
+    public boolean isTzomTaamuz() {
         String tzomTamuzKey = "TzomTaamuz";
         if (!cachedEvaluations.containsKey(tzomTamuzKey)) {
             cachedEvaluations.put(tzomTamuzKey, jewishCalendar.isTaanis() && jewishCalendar.getJewishMonth() == JewishCalendar.TAMMUZ);
@@ -475,7 +500,7 @@ public class HebrewDate {
         return cachedEvaluations.get(tzomTamuzKey);
     }
 
-    public boolean isTzomTeves(){
+    public boolean isTzomTeves() {
         String tzomTevesKey = "TzomTeves";
         if (!cachedEvaluations.containsKey(tzomTevesKey)) {
             cachedEvaluations.put(tzomTevesKey, jewishCalendar.isTaanis() && jewishCalendar.getJewishMonth() == JewishCalendar.TEVES);
@@ -483,25 +508,25 @@ public class HebrewDate {
         return cachedEvaluations.get(tzomTevesKey);
     }
 
-    public boolean isTaanisEsther(){
+    public boolean isTaanisEsther() {
         String taanisEstherKey = "TaanisEsther";
         if (!cachedEvaluations.containsKey(taanisEstherKey)) {
             int month = jewishCalendar.getJewishMonth();
-            cachedEvaluations.put(taanisEstherKey, jewishCalendar.isTaanis() && (month==JewishCalendar.ADAR || month==jewishCalendar.ADAR_II));
+            cachedEvaluations.put(taanisEstherKey, jewishCalendar.isTaanis() && (month == JewishCalendar.ADAR || month == jewishCalendar.ADAR_II));
         }
         return cachedEvaluations.get(taanisEstherKey);
     }
 
-    public boolean isNineDays(){
+    public boolean isNineDays() {
         String nineDaysKey = "NineDays";
         if (!cachedEvaluations.containsKey(nineDaysKey)) {
             int month = jewishCalendar.getJewishMonth();
-            cachedEvaluations.put(nineDaysKey, jewishCalendar.getJewishMonth()==JewishDate.AV && jewishCalendar.getJewishDayOfMonth()<10);
+            cachedEvaluations.put(nineDaysKey, jewishCalendar.getJewishMonth() == JewishDate.AV && jewishCalendar.getJewishDayOfMonth() < 10);
         }
         return cachedEvaluations.get(nineDaysKey);
     }
 
-    public boolean isTuBav(){
+    public boolean isTuBav() {
         String tuBavKey = "TuBav";
         if (!cachedEvaluations.containsKey(tuBavKey)) {
             cachedEvaluations.put(tuBavKey, jewishCalendar.getYomTovIndex() == JewishCalendar.TU_BEAV);
@@ -509,7 +534,7 @@ public class HebrewDate {
         return cachedEvaluations.get(tuBavKey);
     }
 
-    public boolean isTzomGedaliah(){
+    public boolean isTzomGedaliah() {
         String tzomGedaliahKey = "TzomGedaliah";
         if (!cachedEvaluations.containsKey(tzomGedaliahKey)) {
             cachedEvaluations.put(tzomGedaliahKey, jewishCalendar.getYomTovIndex() == JewishCalendar.FAST_OF_GEDALYAH);
@@ -517,7 +542,7 @@ public class HebrewDate {
         return cachedEvaluations.get(tzomGedaliahKey);
     }
 
-    public boolean isErevYomKippur(){
+    public boolean isErevYomKippur() {
         String erevYomKippurKey = "ErevYomKippur";
         if (!cachedEvaluations.containsKey(erevYomKippurKey)) {
             cachedEvaluations.put(erevYomKippurKey, jewishCalendar.getYomTovIndex() == JewishCalendar.EREV_YOM_KIPPUR);
@@ -525,28 +550,28 @@ public class HebrewDate {
         return cachedEvaluations.get(erevYomKippurKey);
     }
 
-    public boolean isLDovid(){
+    public boolean isLDovid() {
         String ldovidKey = "Ldovid";
         if (!cachedEvaluations.containsKey(ldovidKey)) {
             int month = jewishCalendar.getJewishMonth();
-            cachedEvaluations.put(ldovidKey, month==JewishCalendar.ELUL || (month == JewishCalendar.TISHREI && jewishCalendar.getJewishDayOfMonth()<23));
+            cachedEvaluations.put(ldovidKey, month == JewishCalendar.ELUL || (month == JewishCalendar.TISHREI && jewishCalendar.getJewishDayOfMonth() < 23));
         }
         return cachedEvaluations.get(ldovidKey);
     }
 
-    public boolean isErevRoshHashana(){
+    public boolean isErevRoshHashana() {
         String erevRoshHashanaKey = "ErevRoshHashana";
         if (!cachedEvaluations.containsKey(erevRoshHashanaKey)) {
-            cachedEvaluations.put(erevRoshHashanaKey, jewishCalendar.getYomTovIndex()==JewishCalendar.EREV_ROSH_HASHANA);
+            cachedEvaluations.put(erevRoshHashanaKey, jewishCalendar.getYomTovIndex() == JewishCalendar.EREV_ROSH_HASHANA);
         }
         return cachedEvaluations.get(erevRoshHashanaKey);
     }
 
-    public boolean isEseresYemeiTeshuva(){
+    public boolean isEseresYemeiTeshuva() {
         String eseresYemeiTeshuva = "EseresYemeiTeshuva";
         if (!cachedEvaluations.containsKey(eseresYemeiTeshuva)) {
             int month = jewishCalendar.getJewishMonth();
-            cachedEvaluations.put(eseresYemeiTeshuva, month == JewishCalendar.TISHREI && jewishCalendar.getJewishDayOfMonth()<11);
+            cachedEvaluations.put(eseresYemeiTeshuva, month == JewishCalendar.TISHREI && jewishCalendar.getJewishDayOfMonth() < 11);
         }
         return cachedEvaluations.get(eseresYemeiTeshuva);
     }
@@ -693,7 +718,7 @@ public class HebrewDate {
         return cachedEvaluations.get(purimKey);
     }
 
-    public boolean isHebrewLeapYear(){
+    public boolean isHebrewLeapYear() {
         String hebrewLeapYearKey = "HebrewLeapYear";
         if (!cachedEvaluations.containsKey(hebrewLeapYearKey)) {
             cachedEvaluations.put(hebrewLeapYearKey, jewishCalendar.isJewishLeapYear());
